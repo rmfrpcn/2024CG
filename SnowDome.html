@@ -39,6 +39,10 @@
             directionalLight2.position.set(1, 1, 1);
             directionalLight2.castShadow = true; // シャドウを有効にする
             scene.add(directionalLight2);
+            // 平行光源3
+            var directionalLight3 = new THREE.DirectionalLight(0xffffff);
+            directionalLight3.position.set(-1, 1, 1);
+            scene.add(directionalLight3);
 
             /*/ helper
             const gridHelper = new THREE.GridHelper(2, 10); // size, step
@@ -160,6 +164,7 @@
                 snows1.push(snow1);
                 snow1.castShadow = true; // 影を落とす
                 scene.add(snow1);
+                scene.add(snow1);
             }
             const snows2 = [];
             for (let i = 0; i < 10; i++) {
@@ -174,6 +179,7 @@
                 snows2.push(snow2);
                 snow2.castShadow = true; // 影を落とす
                 scene.add(snow2);
+                scene.add(snow2);
             }
             const snows3 = [];
             for (let i = 0; i < 10; i++) {
@@ -187,6 +193,7 @@
                 );
                 snows3.push(snow3);
                 snow3.castShadow = true; // 影を落とす
+                scene.add(snow3);
                 scene.add(snow3);
             }
             for (let i = 0; i < 10; i++) {
@@ -213,7 +220,6 @@
                 snow.castShadow = true; // 影を落とす
                 scene.add(snow);
             }
-
 
             // 初回実行
             var update = function (time) {
