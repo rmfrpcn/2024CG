@@ -15,7 +15,7 @@
             // レンダラーを作成
             var renderer = new THREE.WebGLRenderer();
             renderer.setSize(width, height);
-            document.body.appendChild(renderer.domElement);
+            document.getElementById("container").appendChild(renderer.domElement);
 
             // レンダラー：シャドウを有効にする
             renderer.shadowMap.enabled = true;
@@ -246,6 +246,10 @@
         }
         window.addEventListener('DOMContentLoaded', init);
     </script>
+
+    <div id="container"></div>
+
+    <a href="index.html">index.html</a>
 </body>
 
 </html>
