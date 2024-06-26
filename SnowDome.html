@@ -5,11 +5,21 @@
     <meta charset="UTF-8">
     <title>Snow Dome</title>
     <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
-    <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@0.152.2/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.152.2/examples/jsm/"
+          }
+        }
+      </script>
 </head>
 
 <body>
-    <script>
+    <script type="module">
+        import * as THREE from "three";
+        import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
         var init = function () {
             var width = 800, height = 600;
             // レンダラーを作成
@@ -27,7 +37,7 @@
             var camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
             // カメラの初期座標を設定
             camera.position.set(1, 2, 5); //位置を指定
-            camera.lookAt(0, 0, 0); //見つめる方向
+            const controls = new OrbitControls(camera, document.body);
 
             // 平行光源1
             var directionalLight = new THREE.DirectionalLight(0xffffff);
@@ -43,6 +53,10 @@
             var directionalLight3 = new THREE.DirectionalLight(0xffffff);
             directionalLight3.position.set(-1, 1, 1);
             scene.add(directionalLight3);
+            // 平行光源4
+            var directionalLight4 = new THREE.DirectionalLight(0xffffff);
+            directionalLight4.position.set(0, -5, 0);
+            scene.add(directionalLight4);
 
             /*/ helper
             const gridHelper = new THREE.GridHelper(2, 10); // size, step
