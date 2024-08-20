@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@0.152.2/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.152.2/examples/jsm/"
+          }
+        }
+      </script>
+</head>
+
+<body>
+    <script type="module">
+        import * as THREE from "three";
+        import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+        var init = function () {
+            var width = 800, height = 600;
+            // レンダラーを作成
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize(width, height);
+            document.getElementById("container").appendChild(renderer.domElement);
+            // 背景の色を設定 
+            renderer.setClearColor(0x111191);
+
+            // レンダラー：シャドウを有効にする
+            renderer.shadowMap.enabled = true;
+
+            // シーンを作成
+            var scene = new THREE.Scene();
+
+            // カメラを作成
+            var camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
+            // カメラの初期座標を設定
+            camera.position.set(1, 2, 5); //位置を指定
+            const controls = new OrbitControls(camera, document.body);
+
+            // 平行光源1
+            var directionalLight = new THREE.DirectionalLight(0xffffff);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            // 平行光源2
+            var directionalLight2 = new THREE.DirectionalLight(0xffffff);
+            directionalLight2.position.set(-1, -1, -1);
+            scene.add(directionalLight2);
+            // 平行光源3
+            var directionalLight3 = new THREE.DirectionalLight(0xffffff);
+            directionalLight3.position.set(0, -5, 0);
+            scene.add(directionalLight3);
+
+            // helper
+            const gridHelper = new THREE.GridHelper(2, 10); // size, step
+            scene.add(gridHelper);
+            const axesHelper = new THREE.AxesHelper(2); //軸の長さ　X：赤、Y：緑、z：青
+            scene.add(axesHelper);
+
+            //テクスチャー読み込み
+            var textureLoader = new THREE.TextureLoader();
+            // 地図読み込み
+            var texture1 = textureLoader.load("map.png");
+            var mat1 = new THREE.MeshPhongMaterial();
+            mat1.map = texture1;
+
+            // 地球を作成
+            var sphereGeometry = new THREE.SphereGeometry(0.8, 32, 32);//半径、垂直方向の分割数、水平方向の分割数
+            //var sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00, wireframe: true } );
+            var sphere = new THREE.Mesh(sphereGeometry, mat1);
+            sphere.position.set(0, 0, 0);
+            //グループに追加
+            scene.add(sphere);
+
+            update();
+
+            // 毎フレーム時に実行されるループイベントです
+            function update() {
+                // レンダリング
+                renderer.render(scene, camera);
+                requestAnimationFrame(update);
+
+                // 球を回転させる
+                sphere.rotation.y += 0.005;
+            }
+        }
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+
+    <div id="container"></div>
+
+    <a href="index.html">index.html</a>
+</body>
+
+</html>

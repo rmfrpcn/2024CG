@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+</head>
+
+<body>
+    <script>
+        var init = function () {
+            var width = 800, height = 600;
+            // レンダラーを作成
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize(width, height); document.body.appendChild(renderer.domElement);
+            // シーンを作成
+            var scene = new THREE.Scene();
+            // カメラを作成
+            var camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
+            // 平行光源1
+            var directionalLight = new THREE.DirectionalLight(0xffffff); 
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            // 平行光源2
+            var directionalLight2 = new THREE.DirectionalLight(0xffffff);
+            directionalLight2.position.set(-1, 1, 1);
+            scene.add(directionalLight2);
+            // 平行光源3
+            var directionalLight3 = new THREE.DirectionalLight(0xffffff);
+            directionalLight3.position.set(0, -5, 0);
+            scene.add(directionalLight3);
+            // 星を作成
+            function createStar() {
+                var shape = new THREE.Shape();
+                var outerRadius = 0.25, innerRadius = 0.125;
+                var spikes = 5;
+                var step = Math.PI / spikes;
+
+                for (var i = 0; i < 2 * spikes; i++) {
+                    var x = Math.cos(i * step) * (i % 2 === 0 ? outerRadius : innerRadius);
+                    var y = Math.sin(i * step) * (i % 2 === 0 ? outerRadius : innerRadius);
+                    if (i === 0) {
+                        shape.moveTo(x, y);
+                    } else {
+                        shape.lineTo(x, y);
+                    }
+                }
+                shape.closePath();
+
+                var geometry = new THREE.ShapeGeometry(shape);
+                var material = new THREE.MeshPhongMaterial({ color: 0xffff00, wireframe: true });
+                var star = new THREE.Mesh(geometry, material);
+                return star;
+            }
+
+            var star1 = createStar(); // 星1
+            star1.position.z = -5;
+
+            var star2 = createStar(); // 星2
+            star2.position.z = -5;
+
+            var star3 = createStar(); // 星3
+            star3.position.z = -5;
+
+            var star4 = createStar(); // 星4
+            star4.position.z = -5;
+
+            var star5 = createStar(); // 星5
+            star5.position.z = -5;
+
+            scene.add(star1);
+            scene.add(star2);
+            scene.add(star3);
+            scene.add(star4);
+            scene.add(star5);
+
+            //球を生成
+            function createWireframeSphere() {
+                var geometry = new THREE.SphereGeometry(1, 32, 32);
+                var wireframe = new THREE.WireframeGeometry(geometry);
+                var lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+                var sphere = new THREE.LineSegments(wireframe, lineMaterial);
+                sphere.position.z = -5;
+                return sphere;
+            }
+            var wireframeSphere = createWireframeSphere();
+            scene.add(wireframeSphere);
+
+            // 初回実行
+            var update = function () {
+                requestAnimationFrame(update);
+                // 星を回転させる
+                star1.rotation.x += 0.01; 
+                star1.rotation.y += 0.01;
+                star1.rotation.z += 0.01;
+                star2.rotation.x += 0.02; 
+                star2.rotation.y += 0.02;
+                star2.rotation.z += 0.02;
+                star3.rotation.x += 0.03; 
+                star3.rotation.y += 0.03;
+                star3.rotation.z += 0.03;
+                star4.rotation.x += 0.04; 
+                star4.rotation.y += 0.04;
+                star4.rotation.z += 0.04;
+                star5.rotation.x += 0.05; 
+                star5.rotation.y += 0.05;
+                star5.rotation.z += 0.05;
+                //球を回転させる
+                wireframeSphere.rotation.y += 0.005;
+                renderer.render(scene, camera);
+            };
+            update();
+        }
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

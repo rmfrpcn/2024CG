@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Snow Dome</title>
+    <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+</head>
+
+<body>
+    <script>
+        var init = function () {
+            var width = 800, height = 600;
+            // レンダラーを作成
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize(width, height);
+            document.body.appendChild(renderer.domElement);
+            // シーンを作成
+            var scene = new THREE.Scene();
+            // カメラを作成
+            var camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
+            // カメラの初期座標を設定
+            camera.position.set(1, 2, 5); //位置を指定
+            camera.lookAt(0, 0, 0); //見つめる方向
+            // 平行光源1
+            var directionalLight = new THREE.DirectionalLight(0xffffff);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            // 平行光源2
+            var directionalLight2 = new THREE.DirectionalLight(0xffffff);
+            directionalLight2.position.set(-1, 1, 1);
+            scene.add(directionalLight2);
+
+            // helper
+            const gridHelper = new THREE.GridHelper(2, 10); // size, step
+            scene.add(gridHelper);
+            const axisHelper = new THREE.AxisHelper(2); //軸の長さ　X：赤、Y：緑、z：青
+            scene.add(axisHelper);
+
+            // 星を作成
+            function createStar() {
+                var shape = new THREE.Shape();
+                var outerRadius = 0.0625, innerRadius = 0.03125;
+                var spikes = 5;
+                var step = Math.PI / spikes;
+
+                for (var i = 0; i < 2 * spikes; i++) {
+                    var x = Math.cos(i * step) * (i % 2 === 0 ? outerRadius : innerRadius);
+                    var y = Math.sin(i * step) * (i % 2 === 0 ? outerRadius : innerRadius);
+                    if (i === 0) {
+                        shape.moveTo(x, y);
+                    } else {
+                        shape.lineTo(x, y);
+                    }
+                }
+                shape.closePath();
+
+                var geometry = new THREE.ShapeGeometry(shape);
+                var material = new THREE.MeshPhongMaterial({ color: 0xffff00, wireframe: true });
+                var star = new THREE.Mesh(geometry, material);
+                return star;
+            }
+            const stars = [];
+            for (let i = 0; i < 10; i++ ) {
+                const star = createStar();
+                // 配置座標を計算
+                const radian = i / 10 * Math.PI * 2;
+                const initialY = ((-1) ** i) * 0.5;
+                star.position.set(
+                    0.7 * Math.cos(radian), // X座標
+                    1, // Y座標
+                    0.7 * Math.sin(radian) // Z座標
+                );
+                star.userData.initialY = initialY;
+                stars.push(star);
+                scene.add(star);
+            }
+            
+
+            // 初回実行
+            var update = function (time) {
+                requestAnimationFrame(update);
+
+                //アニメーション
+                stars.forEach(star => {
+                    const speed = 0.0005;
+                    const amplitude = 0.1;
+                    star.position.y = (1 - ((time * speed) % 1));
+                });
+
+                renderer.render(scene, camera);
+            };
+            update();
+        }
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>
